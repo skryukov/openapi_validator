@@ -1,0 +1,5 @@
+title: "Custom Standard"
+type: "object"
+required: [custom_key]
+properties:
+  custom_key: string
