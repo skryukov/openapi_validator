@@ -1,4 +1,12 @@
-# OpenapiValidator
+[gem]: https://rubygems.org/gems/openapi_validator
+[travis]: https://travis-ci.org/llcmedsolutions/openapi_validator
+[codeclimate]: https://codeclimate.com/github/llcmedsolutions/openapi_validator
+
+# openapi_validator
+[![Gem Version](https://badge.fury.io/rb/openapi_validator.svg)][gem]
+[![Build Status](https://travis-ci.org/llcmedsolutions/openapi_validator.svg?branch=master)][travis]
+[![Code Climate](https://codeclimate.com/github/llcmedsolutions/openapi_validator/badges/gpa.svg)][codeclimate]
+[![Test Coverage](https://codeclimate.com/github/llcmedsolutions/openapi_validator/badges/coverage.svg)][codeclimate]
 
 Validator used for [openapi_rspec](https://github.com/llcmedsolutions/openapi_rspec)
 

@@ -140,10 +140,9 @@ RSpec.describe OpenapiValidator do
   xit "validates request body params"
   xit "validates request query params"
 
-  # it "validates response code"
-  # it "validates response media type"
-
   xit "validates response headers"
+  xit "validates response media type"
+  xit "validates response code"
 
   it "validates response body" do
     result = validator.validate_request(
@@ -153,7 +152,7 @@ RSpec.describe OpenapiValidator do
       code: 200,
     # body: {},
     # headers: {},
-      ).validate_response([{ id: 6, name: "doggy" }])
+    ).validate_response([{ id: 6, name: "doggy" }])
 
     expect(result.errors).to eq([])
     expect(result).to be_valid
@@ -167,7 +166,7 @@ RSpec.describe OpenapiValidator do
       code: 200,
     # body: {},
     # headers: {},
-      ).validate_response([{ id: 6, name: nil }])
+    ).validate_response([{ id: 6, name: nil }])
 
     expect(result.errors).to eq([])
     expect(result).to be_valid
