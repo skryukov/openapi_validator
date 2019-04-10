@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    openapi_validator (0.1.0)
+    openapi_validator (0.2.0)
       json-schema (~> 2.8)
 
 GEM
