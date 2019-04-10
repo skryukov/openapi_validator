@@ -142,7 +142,34 @@ RSpec.describe OpenapiValidator do
 
   xit "validates response headers"
   xit "validates response media type"
-  xit "validates response code"
+
+  it "validates response code" do
+    result = validator.validate_request(
+      path: "/pets?limit=10",
+      method: :get,
+      media_type: "application/json",
+      code: 200,
+    # body: {},
+    # headers: {},
+    ).validate_response(body: [{ id: 6, name: "doggy" }], code: 200)
+
+    expect(result.errors).to eq([])
+    expect(result).to be_valid
+  end
+
+  it "validates response code" do
+    result = validator.validate_request(
+      path: "/pets?limit=10",
+      method: :get,
+      media_type: "application/json",
+      code: 200,
+    # body: {},
+    # headers: {},
+    ).validate_response(body: [{ id: 6, name: "doggy" }], code: 201)
+
+    expect(result.errors.first).to include("Expected 200 got 201")
+    expect(result).not_to be_valid
+  end
 
   it "validates response body" do
     result = validator.validate_request(
@@ -152,7 +179,7 @@ RSpec.describe OpenapiValidator do
       code: 200,
     # body: {},
     # headers: {},
-    ).validate_response([{ id: 6, name: "doggy" }])
+    ).validate_response(body: [{ id: 6, name: "doggy" }], code: 200)
 
     expect(result.errors).to eq([])
     expect(result).to be_valid
@@ -166,7 +193,7 @@ RSpec.describe OpenapiValidator do
       code: 200,
     # body: {},
     # headers: {},
-    ).validate_response([{ id: 6, name: nil }])
+    ).validate_response(body: [{ id: 6, name: nil }], code: 200)
 
     expect(result.errors).to eq([])
     expect(result).to be_valid
@@ -178,7 +205,7 @@ RSpec.describe OpenapiValidator do
       method: :get,
       media_type: "application/json",
       code: 200,
-    ).validate_response([{ id: 123 }])
+    ).validate_response(body: [{ id: 123 }], code: 200)
 
     expect(result.errors.first).to include("did not contain a required property of 'name'")
     expect(result).not_to be_valid

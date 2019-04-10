@@ -16,8 +16,12 @@ module OpenapiValidator
       self
     end
 
-    def validate_response(response_body)
-      @response_body = response_body
+    def validate_response(body:, code:)
+      response_body = body
+      response_code = code.to_s
+      if @code != response_code
+        @errors << "Path #{path} did not respond with expected status code. Expected #{@code} got #{response_code}"
+      end
       @errors += JSON::Validator.fully_validate(api_doc, response_body, fragment: fragment)
       self
     end
