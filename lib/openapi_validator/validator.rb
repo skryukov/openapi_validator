@@ -21,10 +21,10 @@ module OpenapiValidator
 
     attr_reader :api_doc, :additional_schemas
 
-    # @param [String] path path to openapi documentation
+    # @param [Hash] doc parsed openapi documentation
     # @param [Array<String>] additional_schemas paths to custom schemas
-    def initialize(path, additional_schemas: [], api_base_path: "")
-      @api_doc = FileLoader.call(path)
+    def initialize(doc, additional_schemas: [], api_base_path: "")
+      @api_doc = doc
       @api_base_path = api_base_path
       @additional_schemas = additional_schemas
     end
