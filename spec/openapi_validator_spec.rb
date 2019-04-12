@@ -80,6 +80,20 @@ RSpec.describe OpenapiValidator do
     expect(result).to be_valid
   end
 
+  it "validates that request is documented" do
+    result = validator.validate_request(
+      path: "/pets/{id}",
+      method: :delete,
+      media_type: "application/json",
+      code: 401,
+    # body: {},
+    # headers: {},
+    )
+
+    expect(result.errors).to eq([])
+    expect(result).to be_valid
+  end
+
   it "returns error when request is not documented" do
     result = validator.validate_request(
       path: "/bad_path?limit=10",

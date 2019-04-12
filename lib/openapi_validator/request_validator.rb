@@ -44,7 +44,7 @@ module OpenapiValidator
     end
 
     def fragment
-      ["#", "paths", path_key, method, "responses", code, "content", media_type, "schema"].tap do |array|
+      @fragment.tap do |array|
         array.define_singleton_method(:split) do |_|
           self
         end
@@ -64,11 +64,18 @@ module OpenapiValidator
         return
       end
 
-      content_schema = responses_schema.dig(code, "content") || responses_schema.dig("default", "content")
+      content_schema = responses_schema.dig(code, "$ref") || responses_schema.dig(code, "content") || responses_schema.dig("default", "$ref") || responses_schema.dig("default", "content")
       unless content_schema
         errors << "OpenAPI documentation does not have a documented response for code #{code}"\
                   " at path #{method.upcase} #{path_key}"
         return
+      end      
+      
+      if content_schema.is_a?(String)
+        @fragment = content_schema.split('/')
+        content_schema = api_doc.dig(*content_schema[2..-1].split('/'), "content")
+      else
+        @fragment = ["#", "paths", path_key, method, "responses", code]
       end
 
       response_schema = content_schema.dig(media_type)
@@ -76,6 +83,7 @@ module OpenapiValidator
         errors << "OpenAPI documentation does not have a documented response for #{media_type}"\
                   " media-type at path #{method.upcase} #{path_key}"
       end
+      @fragment += ["content", media_type, "schema"]
     end
   end
 end

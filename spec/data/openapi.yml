@@ -117,6 +117,8 @@ paths:
       responses:
         '204':
           description: pet deleted
+        '401':
+          $ref: '#/components/responses/Error'
         '500':
           description: unexpected error
           content:
@@ -124,6 +126,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 components:
+  responses:
+    Error:
+      description: error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
     Pet:
       allOf:
