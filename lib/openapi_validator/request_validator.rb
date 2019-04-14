@@ -23,6 +23,7 @@ module OpenapiValidator
         @errors << "Path #{path} did not respond with expected status code. Expected #{@code} got #{response_code}"
       end
       @errors += JSON::Validator.fully_validate(api_doc, response_body, fragment: fragment)
+      @unvalidated_requests.delete(@request_keys) if @errors.empty?
       self
     end
 
@@ -30,13 +31,14 @@ module OpenapiValidator
 
     attr_reader :api_doc, :path, :method, :code, :media_type
 
-    def initialize(api_doc, path:, method:, code:, media_type: "application/json")
+    def initialize(api_doc, path:, method:, code:, media_type: "application/json", unvalidated_requests:)
       @api_doc = api_doc
       @path = path
       @method = method.to_s
       @code = code.to_s
       @media_type = media_type.to_s
       @errors = []
+      @unvalidated_requests = unvalidated_requests
     end
 
     def path_key
@@ -48,7 +50,7 @@ module OpenapiValidator
         array.define_singleton_method(:split) do |_|
           self
         end
-       end
+      end
     end
 
     def validate_path_exists
@@ -64,18 +66,24 @@ module OpenapiValidator
         return
       end
 
-      content_schema = responses_schema.dig(code, "$ref") || responses_schema.dig(code, "content") || responses_schema.dig("default", "$ref") || responses_schema.dig("default", "content")
+      content_schema = responses_schema.dig(code, "$ref") || responses_schema.dig(code, "content")
+      if content_schema
+        @request_keys = [path_key, method, code]
+      else
+        content_schema = responses_schema.dig("default", "$ref") || responses_schema.dig("default", "content")
+        @request_keys = [path_key, method, "default"]
+      end
       unless content_schema
         errors << "OpenAPI documentation does not have a documented response for code #{code}"\
                   " at path #{method.upcase} #{path_key}"
         return
-      end      
-      
+      end
+
       if content_schema.is_a?(String)
         @fragment = content_schema.split('/')
         content_schema = api_doc.dig(*content_schema[2..-1].split('/'), "content")
       else
-        @fragment = ["#", "paths", path_key, method, "responses", code]
+        @fragment = ["#", "paths", path_key, method, "responses", @request_keys.last]
       end
 
       response_schema = content_schema.dig(media_type)
