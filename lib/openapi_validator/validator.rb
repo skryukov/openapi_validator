@@ -1,25 +1,32 @@
 require "json-schema"
 require "openapi_validator/file_loader"
 require "openapi_validator/documentation_validator"
+require "openapi_validator/request"
 require "openapi_validator/request_validator"
 
 module OpenapiValidator
   class Validator
 
-    attr_reader :api_base_path, :unvalidated_requests
+    attr_reader :api_base_path, :unvalidated_requests, :api_doc
 
     # @return [DocumentationValidator] validation result
     def validate_documentation
       DocumentationValidator.call(api_doc, additional_schemas: additional_schemas)
     end
 
+    # @return [Object] RequestValidator
     def validate_request(**params)
-      RequestValidator.call(api_doc, **params, unvalidated_requests: unvalidated_requests)
+      RequestValidator.call(request: Request.call(**params), validator: self)
+    end
+
+    # @param [Array] request
+    def remove_validated_path(request)
+      @unvalidated_requests.delete(request)
     end
 
     private
 
-    attr_reader :api_doc, :additional_schemas
+    attr_reader :additional_schemas
 
     # @param [Hash] doc parsed openapi documentation
     # @param [Array<String>] additional_schemas paths to custom schemas
@@ -30,6 +37,7 @@ module OpenapiValidator
       @unvalidated_requests = build_unvalidated_requests
     end
 
+    # @return [Array]
     def build_unvalidated_requests
       requests = []
       api_doc["paths"] && api_doc["paths"].each do |path, methods|
