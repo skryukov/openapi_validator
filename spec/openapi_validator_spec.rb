@@ -199,6 +199,18 @@ RSpec.describe OpenapiValidator do
     expect(result).to be_valid
   end
 
+  it "validates response body with $ref as a response" do
+    result = validator.validate_request(
+      path: "/pets/{id}",
+      method: :delete,
+      media_type: "application/json",
+      code: 401,
+    ).validate_response(body: { code: 1, message: "Error message" }, code: 401)
+
+    expect(result.errors).to eq([])
+    expect(result).to be_valid
+  end
+
   it "validates response body" do
     result = validator.validate_request(
       path: "/pets?limit=10",

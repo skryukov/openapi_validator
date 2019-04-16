@@ -57,7 +57,7 @@ module OpenapiValidator
       schema = responses.dig("$ref")
       return unless schema
 
-      @fragment_path = "#{schema}/#{media_type}/schema"
+      @fragment_path = schema
       api_doc.dig(*schema[2..-1].split("/"), "content")
     end
 
@@ -87,7 +87,7 @@ module OpenapiValidator
 
     def build_fragment
       if @fragment_path
-        @fragment_path.split("/")
+        @fragment_path.split("/") + ["content", media_type, "schema"]
       else
         ["#", "paths", path_key, method, "responses", @schema_code, "content", media_type, "schema"]
       end
