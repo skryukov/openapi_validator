@@ -6,6 +6,10 @@ module OpenapiValidator
 
     extend Forwardable
 
+    def empty_schema?
+      @empty_schema || false
+    end
+
     def path
       [path_key, method, @schema_code]
     end
@@ -39,6 +43,10 @@ module OpenapiValidator
     end
 
     def validate_path_exists
+      if code_schema.nil?
+        @empty_schema = true
+        return
+      end
       code_schema.dig(media_type) ||
         raise(Error, "OpenAPI documentation does not have a documented response"\
                      " for #{media_type} media-type at path #{method.upcase} #{path_key}")
@@ -86,11 +94,16 @@ module OpenapiValidator
     end
 
     def build_fragment
-      if @fragment_path
-        @fragment_path.split("/") + ["content", media_type, "schema"]
-      else
-        ["#", "paths", path_key, method, "responses", @schema_code, "content", media_type, "schema"]
-      end
+      fragment =
+        if @fragment_path
+          @fragment_path.split("/")
+        else
+          ["#", "paths", path_key, method, "responses", @schema_code]
+        end
+
+      fragment += ["content", media_type, "schema"] unless @empty_schema
+
+      fragment
     end
   end
 end

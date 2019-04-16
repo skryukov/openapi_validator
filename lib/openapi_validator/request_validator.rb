@@ -22,7 +22,13 @@ module OpenapiValidator
       if request.code != code.to_s
         @errors << "Path #{request.path} did not respond with expected status code. Expected #{request.code} got #{code}"
       end
-      @errors += JSON::Validator.fully_validate(validator.api_doc, body, fragment: path_validator.fragment)
+
+      if path_validator.empty_schema?
+        @errors << "Path #{request.path} should return empty response." unless body.empty?
+      else
+        @errors += JSON::Validator.fully_validate(validator.api_doc, body, fragment: path_validator.fragment)
+      end
+
       validator.remove_validated_path(path_validator.path) if @errors.empty?
       self
     end
