@@ -79,6 +79,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
   /pets/{id}:
+    parameters:
+      - in: header
+        name: X-Client-Version
+        schema:
+          type: string
+        example: "v1.0.0"
     get:
       description: Returns a user based on a single ID, if the user does not have access to the pet
       operationId: find pet by id

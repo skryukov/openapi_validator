@@ -39,9 +39,12 @@ module OpenapiValidator
 
     # @return [Array]
     def build_unvalidated_requests
+      http_methods = %w[get put post delete options head patch trace]
       requests = []
       api_doc["paths"] && api_doc["paths"].each do |path, methods|
         methods.each do |method, values|
+          next unless http_methods.include?(method)
+
           values["responses"] && values["responses"].each_key do |code|
             requests << [path, method, code]
           end
