@@ -1,14 +1,14 @@
 [gem]: https://rubygems.org/gems/openapi_validator
-[travis]: https://travis-ci.org/llcmedsolutions/openapi_validator
-[codeclimate]: https://codeclimate.com/github/llcmedsolutions/openapi_validator
+[travis]: https://travis-ci.org/medsolutions/openapi_validator
+[codeclimate]: https://codeclimate.com/github/medsolutions/openapi_validator
 
 # openapi_validator
 [![Gem Version](https://badge.fury.io/rb/openapi_validator.svg)][gem]
-[![Build Status](https://travis-ci.org/llcmedsolutions/openapi_validator.svg?branch=master)][travis]
-[![Code Climate](https://codeclimate.com/github/llcmedsolutions/openapi_validator/badges/gpa.svg)][codeclimate]
-[![Test Coverage](https://codeclimate.com/github/llcmedsolutions/openapi_validator/badges/coverage.svg)][codeclimate]
+[![Build Status](https://travis-ci.org/medsolutions/openapi_validator.svg?branch=master)][travis]
+[![Code Climate](https://codeclimate.com/github/medsolutions/openapi_validator/badges/gpa.svg)][codeclimate]
+[![Test Coverage](https://codeclimate.com/github/medsolutions/openapi_validator/badges/coverage.svg)][codeclimate]
 
-Validator used for [openapi_rspec](https://github.com/llcmedsolutions/openapi_rspec)
+Validator used for [openapi_rspec](https://github.com/medsolutions/openapi_rspec)
 
 ## Installation
 
@@ -38,7 +38,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/llcmedsolutions/openapi_validator.
+Bug reports and pull requests are welcome on GitHub at https://github.com/medsolutions/openapi_validator.
 
 ## License
 

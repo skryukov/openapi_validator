@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["Svyatoslav Kryukov"]
   spec.email = ["s.g.kryukov@yandex.ru"]
   spec.summary = "Validator used for openapi_rspec"
-  spec.homepage = "https://github.com/llcmedsolutions/openapi_validator"
+  spec.homepage = "https://github.com/medsolutions/openapi_validator"
   spec.license = "MIT"
 
   spec.files = Dir["LICENSE.txt", "README.md", "lib/**/*", "data/*"]
