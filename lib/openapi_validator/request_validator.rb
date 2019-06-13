@@ -27,7 +27,9 @@ module OpenapiValidator
       if path_validator.empty_schema?
         @errors << "Path #{request.path} should return empty response." unless body.empty?
       else
-        @errors += JsonValidator.fully_validate(validator.api_doc, body, fragment: path_validator.fragment, response: true)
+        @errors += OpenapiValidator::ResponseValidator.call(
+          request: request, schema: validator.api_doc, data: body, fragment: path_validator.fragment, response: true
+        ).errors
       end
 
       validator.remove_validated_path(path_validator.path) if @errors.empty?
@@ -36,7 +38,7 @@ module OpenapiValidator
 
     private
 
-    attr_reader :request, :validator
+    attr_reader :request, :validator, :response_validator
 
     def initialize(request:, validator:)
       @validator = validator
