@@ -1,4 +1,5 @@
 require "json-schema"
+require "openapi_validator/schema/json_validator"
 require "openapi_validator/schema/required_attribute"
 require "openapi_validator/schema/type_attribute"
 
@@ -12,7 +13,7 @@ module OpenapiValidator
       @names = ['http://example.com/extended_schema']
     end
 
-    JSON::Validator.register_validator(self.new)
-    JSON::Validator.register_default_validator(self.new)
+    JsonValidator.register_validator(self.new)
+    JsonValidator.register_default_validator(self.new)
   end
 end

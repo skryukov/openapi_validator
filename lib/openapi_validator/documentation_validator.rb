@@ -1,5 +1,6 @@
 require "json-schema"
 require "openapi_validator/file_loader"
+require "openapi_validator/schema/json_validator"
 
 module OpenapiValidator
   class DocumentationValidator
@@ -30,7 +31,7 @@ module OpenapiValidator
     # @return [DocumentationValidator]
     def validate
       parsed_schemas.each do |schema|
-        errors.concat JSON::Validator.fully_validate(schema, api_doc)
+        errors.concat JsonValidator.fully_validate(schema, api_doc)
       end
 
       self
