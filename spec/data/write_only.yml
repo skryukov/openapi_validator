@@ -1,0 +1,29 @@
+---
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+paths:
+  /pets:
+    get:
+      responses:
+        '200':
+          description: pet response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+components:
+  schemas:
+    Pet:
+      allOf:
+        - required:
+            - id
+            - secret_tag
+          properties:
+            id: { type: integer }
+            secret_tag:
+              type: string
+              writeOnly: true

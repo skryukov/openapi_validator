@@ -1,4 +1,5 @@
 require 'openapi_validator/path_validator'
+require 'openapi_validator/schema/json_validator'
 
 module OpenapiValidator
   class RequestValidator
@@ -26,7 +27,7 @@ module OpenapiValidator
       if path_validator.empty_schema?
         @errors << "Path #{request.path} should return empty response." unless body.empty?
       else
-        @errors += JSON::Validator.fully_validate(validator.api_doc, body, fragment: path_validator.fragment)
+        @errors += JsonValidator.fully_validate(validator.api_doc, body, fragment: path_validator.fragment, response: true)
       end
 
       validator.remove_validated_path(path_validator.path) if @errors.empty?
