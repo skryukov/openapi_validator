@@ -1,4 +1,5 @@
 require 'openapi_validator/path_validator'
+require 'openapi_validator/response_validator'
 require 'openapi_validator/schema/json_validator'
 
 module OpenapiValidator
