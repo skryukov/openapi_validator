@@ -38,7 +38,7 @@ module OpenapiValidator
 
     private
 
-    attr_reader :request, :validator, :response_validator
+    attr_reader :request, :validator
 
     def initialize(request:, validator:)
       @validator = validator
