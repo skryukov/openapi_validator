@@ -43,3 +43,5 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/medsol
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+This project includes the [OpenAPI 3.0 Schema](https://github.com/googleapis/gnostic/blob/master/OpenAPIv3/openapi-3.0.json) as `data/openapi-3.0.json`. Copyright 2017, Google Inc. Released under the Apache 2.0 license.
