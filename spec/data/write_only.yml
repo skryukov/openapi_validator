@@ -8,7 +8,6 @@ paths:
     get:
       responses:
         '200':
-          description: pet response
           content:
             application/json:
               schema:
@@ -18,12 +17,9 @@ paths:
 components:
   schemas:
     Pet:
-      allOf:
-        - required:
-            - id
-            - secret_tag
-          properties:
-            id: { type: integer }
-            secret_tag:
-              type: string
-              writeOnly: true
+      required: [id, secret_tag]
+      properties:
+        id: { type: integer }
+        secret_tag:
+          type: string
+          writeOnly: true
