@@ -16,7 +16,7 @@ module OpenapiValidator
           !defined_properties[property]["default"].nil? &&
           !defined_properties[property]["readonly"]
 
-        skip_error = processor.options[:response] && defined_properties[property]["writeOnly"]
+        skip_error = processor.options[:response] && defined_properties.dig(property, "writeOnly")
 
         if !prop_defaults && !skip_error
           message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
