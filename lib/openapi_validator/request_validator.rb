@@ -1,10 +1,9 @@
-require 'openapi_validator/path_validator'
-require 'openapi_validator/response_validator'
-require 'openapi_validator/schema/json_validator'
+require "openapi_validator/path_validator"
+require "openapi_validator/response_validator"
+require "openapi_validator/schema/json_validator"
 
 module OpenapiValidator
   class RequestValidator
-
     attr_reader :errors, :api_doc, :path_validator
 
     def valid?

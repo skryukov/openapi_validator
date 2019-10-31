@@ -6,10 +6,10 @@ module OpenapiValidator
       return unless data.is_a?(Hash)
 
       schema = current_schema.schema
-      defined_properties = schema['properties']
+      defined_properties = schema["properties"]
 
-      schema['required'].each do |property, _property_schema|
-        next if data.has_key?(property.to_s)
+      schema["required"].each do |property, _property_schema|
+        next if data.key?(property.to_s)
         prop_defaults = options[:insert_defaults] &&
           defined_properties &&
           defined_properties[property] &&

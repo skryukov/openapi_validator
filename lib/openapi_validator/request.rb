@@ -1,6 +1,5 @@
 module OpenapiValidator
   class Request
-
     attr_reader :path, :method, :code, :media_type
 
     def self.call(**params)

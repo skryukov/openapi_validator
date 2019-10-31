@@ -3,7 +3,6 @@ require "yaml"
 
 module OpenapiValidator
   class FileLoader
-
     # @param [String] path path to file
     # @return [Hash] parsed file
     def self.call(path)

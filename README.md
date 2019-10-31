@@ -7,6 +7,7 @@
 [![Build Status](https://travis-ci.org/medsolutions/openapi_validator.svg?branch=master)][travis]
 [![Code Climate](https://codeclimate.com/github/medsolutions/openapi_validator/badges/gpa.svg)][codeclimate]
 [![Test Coverage](https://codeclimate.com/github/medsolutions/openapi_validator/badges/coverage.svg)][codeclimate]
+[![Ruby Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://github.com/testdouble/standard)
 
 Validator used for [openapi_rspec](https://github.com/medsolutions/openapi_rspec)
 

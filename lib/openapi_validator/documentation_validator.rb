@@ -4,7 +4,6 @@ require "openapi_validator/schema/json_validator"
 
 module OpenapiValidator
   class DocumentationValidator
-
     attr_reader :errors
 
     # @param [Hash] api_doc parsed openapi documentation

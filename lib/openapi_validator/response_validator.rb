@@ -3,7 +3,6 @@ require "openapi_validator/response_validators/image_validator"
 
 module OpenapiValidator
   class ResponseValidator
-
     attr_reader :errors
 
     def valid?
@@ -38,7 +37,7 @@ module OpenapiValidator
 
     def validator
       case request.media_type
-      when 'application/json'
+      when "application/json"
         OpenapiValidator::ResponseValidator::JsonValidator
       when %r{^image/[^/]*$}
         OpenapiValidator::ResponseValidator::ImageValidator

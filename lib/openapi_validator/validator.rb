@@ -6,7 +6,6 @@ require "openapi_validator/request_validator"
 
 module OpenapiValidator
   class Validator
-
     attr_reader :api_base_path, :unvalidated_requests, :api_doc
 
     # @return [DocumentationValidator] validation result
@@ -41,11 +40,12 @@ module OpenapiValidator
     def build_unvalidated_requests
       http_methods = %w[get put post delete options head patch trace]
       requests = []
-      api_doc["paths"] && api_doc["paths"].each do |path, methods|
+
+      api_doc["paths"]&.each do |path, methods|
         methods.each do |method, values|
           next unless http_methods.include?(method)
 
-          values["responses"] && values["responses"].each_key do |code|
+          values["responses"]&.each_key do |code|
             requests << [path, method, code]
           end
         end

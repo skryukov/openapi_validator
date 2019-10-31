@@ -7,13 +7,13 @@ module OpenapiValidator
   class ExtendedSchema < JSON::Schema::Draft4
     def initialize
       super
-      @attributes['type'] = TypeAttribute
-      @attributes['required'] = RequiredAttribute
-      @uri = URI.parse('http://example.com/extended_schema')
-      @names = ['http://example.com/extended_schema']
+      @attributes["type"] = TypeAttribute
+      @attributes["required"] = RequiredAttribute
+      @uri = URI.parse("http://example.com/extended_schema")
+      @names = ["http://example.com/extended_schema"]
     end
 
-    JsonValidator.register_validator(self.new)
-    JsonValidator.register_default_validator(self.new)
+    JsonValidator.register_validator(new)
+    JsonValidator.register_default_validator(new)
   end
 end
