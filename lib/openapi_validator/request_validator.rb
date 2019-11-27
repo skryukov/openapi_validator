@@ -19,7 +19,7 @@ module OpenapiValidator
       self
     end
 
-    def validate_response(body:, code:)
+    def validate_response(body:, code:, media_type: request.media_type)
       if request.code != code.to_s
         @errors << "Path #{request.path} did not respond with expected status code. Expected #{request.code} got #{code}"
       end
@@ -28,7 +28,8 @@ module OpenapiValidator
         @errors << "Path #{request.path} should return empty response." unless body.empty?
       else
         @errors += OpenapiValidator::ResponseValidator.call(
-          request: request, schema: validator.api_doc, data: body, fragment: path_validator.fragment, response: true
+          request: request, schema: validator.api_doc, data: body, media_type: media_type,
+          fragment: path_validator.fragment(media_type: media_type), response: true
         ).errors
       end
 

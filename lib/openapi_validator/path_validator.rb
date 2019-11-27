@@ -14,8 +14,8 @@ module OpenapiValidator
       [path_key, method, @schema_code]
     end
 
-    def fragment
-      build_fragment.tap do |array|
+    def fragment(media_type: nil)
+      build_fragment(media_type: media_type).tap do |array|
         array.define_singleton_method(:split) do |_|
           self
         end
@@ -93,7 +93,7 @@ module OpenapiValidator
         raise(Error, "OpenAPI documentation does not have a documented path for #{path_key}")
     end
 
-    def build_fragment
+    def build_fragment(media_type: nil)
       fragment =
         if @fragment_path
           @fragment_path.split("/")
@@ -101,7 +101,7 @@ module OpenapiValidator
           ["#", "paths", path_key, method, "responses", @schema_code]
         end
 
-      fragment += ["content", media_type, "schema"] unless @empty_schema
+      fragment += ["content", media_type || self.media_type, "schema"] unless @empty_schema
 
       fragment
     end

@@ -58,8 +58,6 @@ RSpec.describe OpenapiValidator do
       method: :get,
       media_type: "application/json",
       code: 200,
-      # body: {},
-      # headers: {},
     )
 
     expect(result.errors).to eq([])
@@ -72,8 +70,6 @@ RSpec.describe OpenapiValidator do
       method: :get,
       media_type: "application/json",
       code: 500,
-      # body: {},
-      # headers: {},
     )
 
     expect(result.errors).to eq([])
@@ -86,8 +82,6 @@ RSpec.describe OpenapiValidator do
       method: :delete,
       media_type: "application/json",
       code: 401,
-      # body: {},
-      # headers: {},
     )
 
     expect(result.errors).to eq([])
@@ -100,8 +94,6 @@ RSpec.describe OpenapiValidator do
       method: :get,
       media_type: "application/json",
       code: 200,
-      # body: {},
-      # headers: {},
     )
 
     expect(result.errors).to eq(["OpenAPI documentation does not have a documented path for /bad_path"])
@@ -114,8 +106,6 @@ RSpec.describe OpenapiValidator do
       method: :delete,
       media_type: "application/json",
       code: 200,
-      # body: {},
-      # headers: {},
     )
 
     expect(result.errors).to eq(["OpenAPI documentation does not have a documented path for DELETE /pets"])
@@ -128,8 +118,6 @@ RSpec.describe OpenapiValidator do
       method: :get,
       media_type: "application/xml",
       code: 200,
-      # body: {},
-      # headers: {},
     )
 
     expect(result.errors).to eq(["OpenAPI documentation does not have a documented response for application/xml media-type at path GET /pets"])
@@ -142,8 +130,6 @@ RSpec.describe OpenapiValidator do
       method: :delete,
       media_type: "application/json",
       code: 444,
-      # body: {},
-      # headers: {},
     )
 
     expect(result.errors).to eq(["OpenAPI documentation does not have a documented response for code 444 at path DELETE /pets/{id}"])
@@ -176,6 +162,18 @@ RSpec.describe OpenapiValidator do
       path: "/pets?limit=10",
       method: :get,
       media_type: "application/json",
+      code: 200
+    ).validate_response(body: "- doggy #6", code: 200, media_type: "text/plain")
+
+    expect(result.errors).to eq([])
+    expect(result).to be_valid
+  end
+
+  it "validates response code" do
+    result = validator.validate_request(
+      path: "/pets?limit=10",
+      method: :get,
+      media_type: "application/json",
       code: 200,
       # body: {},
       # headers: {},
@@ -191,8 +189,6 @@ RSpec.describe OpenapiValidator do
       method: :get,
       media_type: "application/json",
       code: 200,
-      # body: {},
-      # headers: {},
     ).validate_response(body: [{id: 6, name: "doggy"}], code: 200)
 
     expect(result.errors).to eq([])
@@ -217,8 +213,6 @@ RSpec.describe OpenapiValidator do
       method: :get,
       media_type: "application/json",
       code: 200,
-      # body: {},
-      # headers: {},
     ).validate_response(body: [{id: 6, name: nil}], code: 200)
 
     expect(result.errors).to eq([])
