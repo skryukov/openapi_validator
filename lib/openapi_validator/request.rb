@@ -1,22 +1,16 @@
+require "dry-initializer"
+
 module OpenapiValidator
   class Request
-    attr_reader :path, :method, :code, :media_type
+    extend Dry::Initializer
 
-    def self.call(**params)
-      new(**params)
-    end
+    option :path, proc(&:to_s)
+    option :method, proc(&:to_s)
+    option :code, proc(&:to_s)
+    option :media_type, proc(&:to_s), default: -> { "application/json" }
 
     def path_key
       path[%r{(/[-_/\{\}\w]*)}]
-    end
-
-    private
-
-    def initialize(path:, method:, code:, media_type: "application/json")
-      @path = path
-      @method = method.to_s
-      @code = code.to_s
-      @media_type = media_type.to_s
     end
   end
 end

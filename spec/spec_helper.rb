@@ -13,7 +13,6 @@ end
 
 require "bundler/setup"
 require "openapi_validator"
-require "openapi_validator/response_validator"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

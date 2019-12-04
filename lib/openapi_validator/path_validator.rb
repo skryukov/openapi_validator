@@ -1,109 +1,66 @@
-require "forwardable"
+require "dry-initializer"
+require "openapi_validator/path"
 
 module OpenapiValidator
   class PathValidator
     class Error < StandardError; end
 
-    extend Forwardable
+    extend Dry::Initializer
 
-    def empty_schema?
-      @empty_schema || false
-    end
+    option :api_doc
+    option :request
 
-    def path
-      [path_key, method, @schema_code]
-    end
-
-    def fragment(media_type: nil)
-      build_fragment(media_type: media_type).tap do |array|
-        array.define_singleton_method(:split) do |_|
-          self
-        end
-      end
-    end
 
     def self.call(**params)
       new(**params).call
     end
 
     def call
-      validate_path_exists
-      self
+      build_path
     end
 
     private
 
-    attr_reader :api_doc
-
-    def_delegators :@request, :media_type, :method, :path_key, :code
-
-    def initialize(request:, api_doc:)
-      @request = request
-      @api_doc = api_doc
-    end
-
-    def validate_path_exists
-      if code_schema.nil?
-        @empty_schema = true
-        return
-      end
-      code_schema.dig(media_type) ||
-        raise(Error, "OpenAPI documentation does not have a documented response"\
-                     " for #{media_type} media-type at path #{method.upcase} #{path_key}")
+    def build_path
+      Path.new(request: request,
+               code_schema: code_schema,
+               fragment_path: @fragment_path,
+               schema_code: @schema_code)
     end
 
     def code_schema
       schema = schema_code
-      ref_schema(schema) || content_schema(schema)
-    end
-
-    def content_schema(responses)
-      responses.dig("content")
-    end
-
-    def ref_schema(responses)
-      schema = responses.dig("$ref")
-      return unless schema
-
-      @fragment_path = schema
-      api_doc.dig(*schema[2..-1].split("/"), "content")
+      if schema && schema["$ref"]
+        @fragment_path = schema["$ref"].split("/")
+        api_doc.dig(*(schema["$ref"][2..-1].split("/")))
+      else
+        @fragment_path = ["#", "paths", request.path_key, request.method, "responses", @schema_code]
+        schema
+      end["content"]
     end
 
     def schema_code
       responses = responses_schema
-      if responses.dig(code)
-        @schema_code = code
-      elsif responses.dig("default")
+      if responses[request.code]
+        @schema_code = request.code
+      elsif responses["default"]
         @schema_code = "default"
       else
-        raise(Error, "OpenAPI documentation does not have a documented response for code #{code}"\
-                    " at path #{method.upcase} #{path_key}")
+        raise(Error, "OpenAPI documentation does not have a documented response for code #{request.code}"\
+                    " at path #{request.method.upcase} #{request.path_key}")
       end
 
       responses.dig(@schema_code)
     end
 
     def responses_schema
-      path_schema.dig(method, "responses") ||
-        raise(Error, "OpenAPI documentation does not have a documented path for #{method.upcase} #{path_key}")
+      path_schema.dig(request.method, "responses") ||
+        raise(Error, "OpenAPI documentation does not have a documented path for #{request.method.upcase} #{request.path_key}")
     end
 
     def path_schema
-      api_doc.dig("paths", path_key) ||
-        raise(Error, "OpenAPI documentation does not have a documented path for #{path_key}")
-    end
-
-    def build_fragment(media_type: nil)
-      fragment =
-        if @fragment_path
-          @fragment_path.split("/")
-        else
-          ["#", "paths", path_key, method, "responses", @schema_code]
-        end
-
-      fragment += ["content", media_type || self.media_type, "schema"] unless @empty_schema
-
-      fragment
+      api_doc.dig("paths", request.path_key) ||
+        raise(Error, "OpenAPI documentation does not have a documented path for #{request.path_key}")
     end
   end
 end

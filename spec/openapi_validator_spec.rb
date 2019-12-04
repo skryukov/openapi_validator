@@ -116,11 +116,10 @@ RSpec.describe OpenapiValidator do
     result = validator.validate_request(
       path: "/pets?limit=10",
       method: :get,
-      media_type: "application/xml",
       code: 200,
-    )
+    ).validate_response(body: [{id: 6, name: "doggy"}], media_type: "application/pdf", code: 200)
 
-    expect(result.errors).to eq(["OpenAPI documentation does not have a documented response for application/xml media-type at path GET /pets"])
+    expect(result.errors).to eq(["OpenAPI documentation does not have a documented response for application/pdf media-type at path GET /pets"])
     expect(result).not_to be_valid
   end
 
@@ -149,9 +148,20 @@ RSpec.describe OpenapiValidator do
       method: :get,
       media_type: "application/json",
       code: 200,
-      # body: {},
-      # headers: {},
     ).validate_response(body: [{id: 6, name: "doggy"}], code: 200)
+
+    expect(result.errors).to eq([])
+    expect(result).to be_valid
+  end
+
+  it "validates response code" do
+    result = validator.validate_request(
+      path: "/pets",
+      method: :post,
+      media_type: "application/json",
+      # body: [{name: "doggy"}],
+      code: 200,
+    ).validate_response(body: [{id: 6, name: "doggy", xml: true}], code: 200, media_type: "application/xml")
 
     expect(result.errors).to eq([])
     expect(result).to be_valid

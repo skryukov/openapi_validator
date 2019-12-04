@@ -1,4 +1,5 @@
 require "json-schema"
+
 require "openapi_validator/schema/json_validator"
 require "openapi_validator/schema/required_attribute"
 require "openapi_validator/schema/type_attribute"

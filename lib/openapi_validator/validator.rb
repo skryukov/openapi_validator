@@ -1,46 +1,39 @@
-require "json-schema"
-require "openapi_validator/file_loader"
-require "openapi_validator/documentation_validator"
+require "dry-initializer"
+
+require "openapi_validator/documentation_validation"
 require "openapi_validator/request"
 require "openapi_validator/request_validator"
 
 module OpenapiValidator
   class Validator
-    attr_reader :api_base_path, :unvalidated_requests, :api_doc
+    extend Dry::Initializer
 
-    # @return [DocumentationValidator] validation result
+    param :api_doc
+    option :api_base_path, default: -> { "".freeze }
+    option :additional_schemas, default: -> { [] }
+    option :unvalidated_requests, default: -> { build_unvalidated_requests }
+
+    # @return [Result] validation result
     def validate_documentation
-      DocumentationValidator.call(api_doc, additional_schemas: additional_schemas)
+      DocumentationValidation.call(api_doc: api_doc, additional_schemas: additional_schemas)
     end
 
-    # @return [Object] RequestValidator
+    # @return [RequestValidator]
     def validate_request(**params)
-      RequestValidator.call(request: Request.call(**params), validator: self)
+      RequestValidator.call(request: Request.new(**params), validator: self)
     end
 
     # @param [Array] request
     def remove_validated_path(request)
-      @unvalidated_requests.delete(request)
+      unvalidated_requests.delete(request)
     end
 
     private
-
-    attr_reader :additional_schemas
-
-    # @param [Hash] doc parsed openapi documentation
-    # @param [Array<String>] additional_schemas paths to custom schemas
-    def initialize(doc, additional_schemas: [], api_base_path: "")
-      @api_doc = doc
-      @api_base_path = api_base_path
-      @additional_schemas = additional_schemas
-      @unvalidated_requests = build_unvalidated_requests
-    end
 
     # @return [Array]
     def build_unvalidated_requests
       http_methods = %w[get put post delete options head patch trace]
       requests = []
-
       api_doc["paths"]&.each do |path, methods|
         methods.each do |method, values|
           next unless http_methods.include?(method)
