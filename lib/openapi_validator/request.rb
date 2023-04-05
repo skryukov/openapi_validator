@@ -7,7 +7,7 @@ module OpenapiValidator
     end
 
     def path_key
-      path[%r{(/[-_/\{\}\w]*)}]
+      path[%r{(/[-_/\{\}\w]*)(\.[\{\}\w]*)?}]
     end
 
     private
